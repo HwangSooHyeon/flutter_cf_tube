@@ -3,9 +3,14 @@ import 'package:flutter_cf_tube/component/custom_youtube_player.dart';
 import 'package:flutter_cf_tube/model/video_model.dart';
 import 'package:flutter_cf_tube/repository/youtube_repository.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,15 +37,20 @@ class HomeScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          return ListView(
-            physics: BouncingScrollPhysics(),
-            children: snapshot.data!
-                .map(
-                  (videoModel) => CustomYoutubePlayer(
-                    videoModel: videoModel,
-                  ),
-                )
-                .toList(),
+          return RefreshIndicator(
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: snapshot.data!
+                  .map(
+                    (videoModel) => CustomYoutubePlayer(
+                      videoModel: videoModel,
+                    ),
+                  )
+                  .toList(),
+            ),
+            onRefresh: () async {
+              setState(() {});
+            },
           );
         },
       ),
